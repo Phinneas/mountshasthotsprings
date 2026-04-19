@@ -1,9 +1,7 @@
 ---
-image: "@assets/astrogon-star.svg"
-imageAlt: Astrogon logo
-title: Astrogon
-content: A rapidly-customizable template for a blog, documentation, and more.
+title: Soak Shasta
+content: Your guide to Northern California's best hot springs near Mount Shasta — from natural wilderness pools to luxury resort soaks.
 button:
-  label: See the Code
-  link: https://github.com/astrogon/astrogon
+  label: Explore the Map
+  link: /map
 ---
