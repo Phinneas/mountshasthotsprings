@@ -42,32 +42,32 @@ module.exports = {
     },
     extend: {
       colors: {
-        // Hot Springs palette
-        // Dark Vanilla #D5BA9C | Dirt #A1704B | Olive Drab Camo #5E5137 | Jasper Orange #DF804D | Coconut #A1553D
-        accent: "#DF804D", // Jasper Orange — buttons, highlights, map markers
+        // Mt Shasta palette
+        // #edba97 | #e17426 | #701b15 | #a4c0c1 | #0a4152
+        accent: "#e17426",
         txt: {
-          p: "#5E5137", // Olive Drab Camo — headers
-          s: "#5E5137", // Olive Drab Camo — body text (dark for readability)
-          light: "#8B7355", // Warm medium brown — muted/selected
+          p: "#701b15", // Deep wine — headers
+          s: "#701b15", // Deep wine — body text (dark for readability)
+          light: "#924a3e", // Lighter wine — muted/selected
         },
         bg: {
-          p: "#D5BA9C", // Dark Vanilla — main background
-          s: "#E8D5C0", // Lighter vanilla — glass elements (lighter than bg-p for contrast)
-          t: "#D5BA9C", // Dark Vanilla — glass contrast
+          p: "#edba97", // Warm cream — main background
+          s: "#c8d8d6", // Light sage — glass elements (lighter for contrast)
+          t: "#edba97", // Warm cream — glass contrast
         },
-        border: "#A1553D", // Coconut
+        border: "#0a4152", // Deep teal
         darkmode: {
           txt: {
-            p: "#D5BA9C", // Dark Vanilla — headers
-            s: "#D5BA9C", // Dark Vanilla — body text (light on dark bg)
-            light: "#C4A882", // Medium vanilla — muted
+            p: "#edba97", // Warm cream — headers
+            s: "#edba97", // Warm cream — body text (light on dark bg)
+            light: "#e17426", // Vibrant orange — muted
           },
           bg: {
-            p: "#5E5137", // Olive Drab Camo — main background
-            s: "#6B5D48", // Lighter olive — glass elements (lighter for contrast)
-            t: "#5E5137", // Olive Drab Camo — glass contrast
+            p: "#0a4152", // Deep teal — main background
+            s: "#1a5a6b", // Lighter teal — glass elements
+            t: "#0a4152", // Deep teal — glass contrast
           },
-          border: "#A1553D", // Coconut
+          border: "#0a4152", // Deep teal
         },
       },
       minHeight: {
