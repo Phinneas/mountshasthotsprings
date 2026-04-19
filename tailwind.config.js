@@ -48,7 +48,7 @@ module.exports = {
         txt: {
           p: "#701b15", // Deep wine — headers
           s: "#701b15", // Deep wine — body text (dark for readability)
-          light: "#924a3e", // Lighter wine — muted/selected
+          light: "#5a1510", // Darker wine — muted/selected (still dark)
         },
         bg: {
           p: "#edba97", // Warm cream — main background
@@ -58,14 +58,14 @@ module.exports = {
         border: "#0a4152", // Deep teal
         darkmode: {
           txt: {
-            p: "#edba97", // Warm cream — headers
-            s: "#edba97", // Warm cream — body text (light on dark bg)
-            light: "#e17426", // Vibrant orange — muted
+            p: "#701b15", // Deep wine — headers
+            s: "#701b15", // Deep wine — body text (always dark)
+            light: "#5a1510", // Darker wine — muted
           },
           bg: {
-            p: "#0a4152", // Deep teal — main background
-            s: "#1a5a6b", // Lighter teal — glass elements
-            t: "#0a4152", // Deep teal — glass contrast
+            p: "#dbb088", // Slightly darker cream — main background
+            s: "#b8c8c6", // Sage — glass elements
+            t: "#dbb088", // Slightly darker cream — glass contrast
           },
           border: "#0a4152", // Deep teal
         },
