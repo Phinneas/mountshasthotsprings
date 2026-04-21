@@ -10,7 +10,8 @@
     "access_type": "Drive-up",
     "season": "Year-round",
     "description": "Hot springs in the Central Coast region of California.",
-    "has_post": false
+    "has_post": false,
+    "state": "CA"
   },
   {
     "id": "2",
@@ -23,7 +24,8 @@
     "access_type": "Not soakable",
     "season": "N/A",
     "description": "Geothermal field in the Mayacamas Mountains. Not a soaking spring \u2014 the world's largest geothermal steam field used for power generation.",
-    "has_post": false
+    "has_post": false,
+    "state": "CA"
   },
   {
     "id": "3",
@@ -36,7 +38,8 @@
     "access_type": "Drive-up",
     "season": "Year-round",
     "description": "Geothermal hot springs in the remote Surprise Valley of Northeastern California near the Nevada border.",
-    "has_post": false
+    "has_post": false,
+    "state": "CA"
   },
   {
     "id": "4",
@@ -49,7 +52,8 @@
     "access_type": "Drive-up",
     "season": "Year-round",
     "description": "Hot springs near Lake City in Modoc County, Northeastern California.",
-    "has_post": false
+    "has_post": false,
+    "state": "CA"
   },
   {
     "id": "5",
@@ -62,7 +66,8 @@
     "access_type": "Hike-in",
     "season": "Year-round",
     "description": "Geothermal feature near Lassen Volcanic National Park with extremely hot water. Not recommended for soaking.",
-    "has_post": false
+    "has_post": false,
+    "state": "CA"
   },
   {
     "id": "6",
@@ -75,7 +80,8 @@
     "access_type": "Drive-up",
     "season": "Year-round",
     "description": "Natural hot springs in Lassen County near the Nevada border.",
-    "has_post": false
+    "has_post": false,
+    "state": "CA"
   },
   {
     "id": "7",
@@ -88,7 +94,8 @@
     "access_type": "Hike-in",
     "season": "Year-round",
     "description": "Geothermal hot spring near Lassen Volcanic National Park.",
-    "has_post": false
+    "has_post": false,
+    "state": "CA"
   },
   {
     "id": "8",
@@ -101,7 +108,8 @@
     "access_type": "Drive-up",
     "season": "Year-round",
     "description": "Remote hot springs in Modoc County, Northeastern California.",
-    "has_post": false
+    "has_post": false,
+    "state": "CA"
   },
   {
     "id": "9",
@@ -114,7 +122,8 @@
     "access_type": "Drive-up",
     "season": "Year-round",
     "description": "Natural hot springs in the Eastern Sierra near Mammoth Lakes.",
-    "has_post": false
+    "has_post": false,
+    "state": "CA"
   },
   {
     "id": "10",
@@ -129,7 +138,8 @@
     "clothing": "Clothing optional",
     "description": "Free natural hot spring tubs in the Eastern Sierra with panoramic views of the Sierra Nevada.",
     "best_time": "Sunrise or sunset for best views",
-    "has_post": false
+    "has_post": false,
+    "state": "CA"
   },
   {
     "id": "11",
@@ -144,7 +154,8 @@
     "clothing": "Clothing optional",
     "description": "Popular free hot spring along the John Muir Trail near Mammoth Lakes.",
     "best_time": "Weekday mornings",
-    "has_post": false
+    "has_post": false,
+    "state": "CA"
   },
   {
     "id": "12",
@@ -158,7 +169,8 @@
     "season": "Year-round",
     "clothing": "Clothing optional",
     "description": "Natural rock-walled hot spring near Mammoth Lakes in the Eastern Sierra.",
-    "has_post": false
+    "has_post": false,
+    "state": "CA"
   },
   {
     "id": "13",
@@ -172,7 +184,8 @@
     "season": "Year-round",
     "clothing": "Clothing optional",
     "description": "Secluded natural hot spring tub near Mammoth Lakes in the Eastern Sierra.",
-    "has_post": false
+    "has_post": false,
+    "state": "CA"
   },
   {
     "id": "14",
@@ -185,7 +198,8 @@
     "access_type": "Hike-in",
     "season": "Year-round",
     "description": "Small natural hot spring tub near Mammoth Lakes in the Eastern Sierra.",
-    "has_post": false
+    "has_post": false,
+    "state": "CA"
   },
   {
     "id": "15",
@@ -200,7 +214,8 @@
     "clothing": "Clothing optional",
     "description": "Natural hot creek in the Eastern Sierra near Mammoth Lakes. Hot water mixes with cool creek flow.",
     "best_time": "Early morning for warmer water",
-    "has_post": false
+    "has_post": false,
+    "state": "CA"
   },
   {
     "id": "16",
@@ -213,7 +228,8 @@
     "access_type": "Hike-in",
     "season": "Summer only",
     "description": "Natural hot springs near Red's Meadow Resort in the Ansel Adams Wilderness.",
-    "has_post": false
+    "has_post": false,
+    "state": "CA"
   },
   {
     "id": "17",
@@ -229,7 +245,8 @@
     "description": "Remote hot springs in the Ansel Adams Wilderness, accessible via a strenuous hike.",
     "best_time": "Late summer when trail is snow-free",
     "insider_tips": "Requires a 10+ mile hike. Bring everything you need \u2014 no services.",
-    "has_post": false
+    "has_post": false,
+    "state": "CA"
   },
   {
     "id": "18",
@@ -245,7 +262,8 @@
     "description": "Scenic travertine rock formations with natural soaking pools near Bridgeport in the Eastern Sierra.",
     "best_time": "Sunrise for fewer visitors",
     "insider_tips": "The pools closest to the road are the most visited. Walk further for more secluded options.",
-    "has_post": false
+    "has_post": false,
+    "state": "CA"
   },
   {
     "id": "19",
@@ -260,7 +278,8 @@
     "clothing": "Required",
     "description": "Historic resort with naturally flowing mineral springs in Colusa County. Temperature ranges from 98-112\u00b0F.",
     "best_time": "Midweek for availability",
-    "has_post": false
+    "has_post": false,
+    "state": "CA"
   },
   {
     "id": "20",
@@ -276,7 +295,8 @@
     "description": "Non-profit retreat center with natural mineral springs in the Sierra Nevada. Temperature ranges from 98-110\u00b0F.",
     "best_time": "Weekday visits for fewer crowds",
     "insider_tips": "Book in advance \u2014 it's a popular retreat destination.",
-    "has_post": false
+    "has_post": false,
+    "state": "CA"
   },
   {
     "id": "21",
@@ -289,7 +309,8 @@
     "access_type": "Hike-in",
     "season": "Year-round",
     "description": "Natural hot springs in the Santa Ynez Mountains behind Santa Barbara.",
-    "has_post": false
+    "has_post": false,
+    "state": "CA"
   },
   {
     "id": "22",
@@ -302,7 +323,8 @@
     "access_type": "Hike-in",
     "season": "Year-round",
     "description": "Smaller hot springs near Big Caliente in the Santa Ynez Mountains.",
-    "has_post": false
+    "has_post": false,
+    "state": "CA"
   },
   {
     "id": "23",
@@ -315,7 +337,8 @@
     "access_type": "Hike-in",
     "season": "Year-round",
     "description": "Natural hot springs in the Los Padres National Forest near Santa Barbara.",
-    "has_post": false
+    "has_post": false,
+    "state": "CA"
   },
   {
     "id": "24",
@@ -328,7 +351,8 @@
     "access_type": "Drive-up",
     "season": "Year-round",
     "description": "Historic hot springs community in the Sierra Nevada foothills of Tulare County.",
-    "has_post": false
+    "has_post": false,
+    "state": "CA"
   },
   {
     "id": "25",
@@ -341,7 +365,8 @@
     "access_type": "Hike-in",
     "season": "Year-round",
     "description": "Coastal hot springs on the Big Sur coastline. Access requires hiking or boat.",
-    "has_post": false
+    "has_post": false,
+    "state": "CA"
   },
   {
     "id": "26",
@@ -354,7 +379,8 @@
     "access_type": "Drive-up",
     "season": "Year-round",
     "description": "Desert community with multiple spa resorts fed by natural mineral hot springs near Palm Springs.",
-    "has_post": false
+    "has_post": false,
+    "state": "CA"
   },
   {
     "id": "27",
@@ -367,7 +393,8 @@
     "access_type": "Not accessible",
     "season": "N/A",
     "description": "Geothermal area within the Naval Air Weapons Station China Lake. Not accessible to the public.",
-    "has_post": false
+    "has_post": false,
+    "state": "CA"
   },
   {
     "id": "28",
@@ -380,7 +407,8 @@
     "access_type": "Not accessible",
     "season": "N/A",
     "description": "Geothermal area near Coso Hot Springs within military grounds. Not accessible to the public.",
-    "has_post": false
+    "has_post": false,
+    "state": "CA"
   },
   {
     "id": "29",
