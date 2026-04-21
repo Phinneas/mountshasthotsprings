@@ -61,8 +61,8 @@ External Resources:
 
 - [Google Fonts](https://fonts.google.com/)
 - [Mozilla Docs](https://developer.mozilla.org/en-US/docs/Web/CSS/font-family)
-- [Inter Font](https://rsms.me/inter/#)
-- [Manrope Font](https://www.gent.media/manrope)
+- [National Park Font](https://nationalparktypeface.com/)
+- [Fraunces Font](https://fonts.google.com/specimen/Fraunces)
 
 Generic font families that require no import:
 

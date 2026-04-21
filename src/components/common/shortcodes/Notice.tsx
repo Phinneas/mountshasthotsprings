@@ -86,7 +86,7 @@ function Notice({
             />
           </svg>
         )}
-        <p className="font-secondary text-xl font-semibold text-txt-p dark:text-darkmode-txt-light my-0">
+        <p className="font-body text-xl font-semibold text-txt-p dark:text-darkmode-txt-light my-0">
           {upperHumanize(type)}
         </p>
       </div>
