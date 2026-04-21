@@ -1,4 +1,4 @@
 ---
 title: Authors
-description: Writers behind Soak Shasta
+description: Writers behind Shasta Hot Springs
 ---
