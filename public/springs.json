@@ -726,5 +726,35 @@
     "description": "Natural springs in the Blue Mountains of eastern Oregon.",
     "has_post": false,
     "slug": "blue-mountain-hot-springs"
+  },
+  {
+    "id": "52",
+    "slug": "little-geysers",
+    "name": "Little Geysers",
+    "lat": 38.767,
+    "lng": -122.748,
+    "temp_f": 210,
+    "fee": null,
+    "access_type": "Restricted",
+    "season": "Year-round",
+    "clothing": "",
+    "description": "Geothermal area near The Geysers \u2014 extreme heat, not for soaking.",
+    "has_post": false,
+    "state": "CA"
+  },
+  {
+    "id": "53",
+    "slug": "susanville-hot-spring",
+    "name": "Susanville Hot Spring",
+    "lat": 40.364,
+    "lng": -120.243,
+    "temp_f": 204,
+    "fee": null,
+    "access_type": "Drive-up",
+    "season": "Year-round",
+    "clothing": "",
+    "description": "Hot springs near Susanville in Lassen County.",
+    "has_post": false,
+    "state": "CA"
   }
 ]
