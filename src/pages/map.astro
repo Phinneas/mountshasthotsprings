@@ -5,7 +5,7 @@ import { mapboxAccessToken } from '@/config/map';
 
 <BaseLayout
   title="Northern California Hot Springs Map"
-  description="Interactive map of all hot springs in Northern California with conditions, access info, and trip planning."
+  description="Interactive map of all hot springs in Northern California and Southern Oregon with conditions, access info, and trip planning."
 >
   <div class="map-page" data-mapbox-token={mapboxAccessToken}>
     <aside class="map-sidebar">
@@ -86,6 +86,16 @@ import { mapboxAccessToken } from '@/config/map';
         <button id="detail-close" class="detail-close" aria-label="Close">✕</button>
         <div id="detail-content"></div>
       </div>
+
+      <!-- Directions panel -->
+      <div id="directions-panel" class="directions-panel hidden">
+        <button id="directions-close" class="directions-close" aria-label="Close">✕</button>
+        <div class="directions-header">
+          <h3>Driving Directions</h3>
+        </div>
+        <div id="directions-content"></div>
+      </div>
+      <button id="directions-btn" class="directions-toggle" title="Get directions">🧭</button>
 
       <!-- Passport panel -->
       <div id="passport-panel" class="passport-panel hidden">
@@ -970,71 +980,6 @@ async function initMap() {
     }
   }
 
-  // ─── Detail panel ────────────────────────────────────────────────────────────
-  function openDetail(spring, map) {
-    map.flyTo({ center: [spring.lng, spring.lat], zoom: 12, duration: 800 });
-    trackEvent('click', spring.slug);
-
-    // Close directions panel if open
-    closeDirectionsPanel();
-
-    const detail = document.getElementById('spring-detail');
-    const content = document.getElementById('detail-content');
-    detail.classList.remove('hidden');
-    detail.style.display = '';
-
-    const blogSlug = spring.slug;
-
-    content.innerHTML = `
-      <h2>${spring.name}</h2>
-      <div class="detail-chips">
-        ${spring.temp_f ? `<span class="chip">🌡 ${spring.temp_f}°F</span>` : ''}
-        ${spring.fee != null ? `<span class="chip">💰 ${spring.fee === 0 ? 'Free' : '$' + spring.fee}</span>` : ''}
-        ${spring.access_type ? `<span class="chip">🥾 ${spring.access_type}</span>` : ''}
-        ${spring.season ? `<span class="chip">📅 ${spring.season}</span>` : ''}
-      </div>
-      ${spring.description ? `<p class="detail-desc">${spring.description}</p>` : ''}
-      <dl class="detail-grid">
-        ${spring.hours ? `<dt>Hours</dt><dd>${spring.hours}</dd>` : ''}
-        ${spring.clothing ? `<dt>Clothing</dt><dd>${spring.clothing}</dd>` : ''}
-        ${spring.parking ? `<dt>Parking</dt><dd>${spring.parking}</dd>` : ''}
-        ${spring.cell_coverage ? `<dt>Cell</dt><dd>${spring.cell_coverage}</dd>` : ''}
-        ${spring.road_condition ? `<dt>Road</dt><dd>${spring.road_condition}</dd>` : ''}
-        ${spring.best_time ? `<dt>Best time</dt><dd>${spring.best_time}</dd>` : ''}
-        ${spring.alerts ? `<dt>Alerts</dt><dd class="alert-text">${spring.alerts}</dd>` : ''}
-      </dl>
-      ${spring.insider_tips ? `<div class="insider-tip"><strong>💡 Insider tip:</strong> ${spring.insider_tips}</div>` : ''}
-      <div class="detail-actions">
-        <button onclick="toggleVisited('${spring.slug}')" id="visited-btn-${spring.slug}" class="btn-detail ${isVisited(spring.slug) ? 'btn-visited' : 'btn-secondary'}">
-          ${isVisited(spring.slug) ? '✓ Visited' : '✓ Mark Visited'}
-        </button>
-        ${spring.has_post !== false ? `<a href="/blog/${blogSlug}" class="btn-detail">Read full guide →</a>` : ''}
-        <button onclick="getDirectionsTo(${spring.lat}, ${spring.lng}, '${spring.name}')" class="btn-detail btn-secondary">Get Directions ↗</button>
-      </div>
-    `;
-
-    // Update visited button state after render
-    updateVisitedButton(spring.slug);
-  }
-
-  function updateVisitedButton(slug) {
-    const btn = document.getElementById(`visited-btn-${slug}`);
-    if (!btn) return;
-    const visited = isVisited(slug);
-    btn.className = `btn-detail ${visited ? 'btn-visited' : 'btn-secondary'}`;
-    btn.textContent = visited ? '✓ Visited' : '✓ Mark Visited';
-  }
-
-  window.toggleVisited = function(slug) {
-    if (isVisited(slug)) {
-      unmarkVisited(slug);
-    } else {
-      markVisited(slug);
-      trackEvent('visited', slug);
-    }
-    updateVisitedButton(slug);
-  };
-
   // ─── Directions functionality ────────────────────────────────────────────
   function getDirectionsTo(lat, lng, name) {
     // Track direction request
@@ -1159,29 +1104,69 @@ async function initMap() {
     return h > 0 ? `${h}h ${m}m` : `${m}m`;
   }
 
-  function openPopupDetail(slug) {
-    const spring = springs.find(s => s.slug === slug);
-    if (spring) {
-      openDetail(spring, map);
-    }
+  // ─── Detail panel ────────────────────────────────────────────────────────────
+  function openDetail(spring, map) {
+    map.flyTo({ center: [spring.lng, spring.lat], zoom: 12, duration: 800 });
+    trackEvent('click', spring.slug);
+
+    // Close directions panel if open
+    closeDirectionsPanel();
+
+    const detail = document.getElementById('spring-detail');
+    const content = document.getElementById('detail-content');
+    detail.classList.remove('hidden');
+    detail.style.display = '';
+
+    const blogSlug = spring.slug;
+
+    content.innerHTML = `
+      <h2>${spring.name}</h2>
+      <div class="detail-chips">
+        ${spring.temp_f ? `<span class="chip">🌡 ${spring.temp_f}°F</span>` : ''}
+        ${spring.fee != null ? `<span class="chip">💰 ${spring.fee === 0 ? 'Free' : '$' + spring.fee}</span>` : ''}
+        ${spring.access_type ? `<span class="chip">🥾 ${spring.access_type}</span>` : ''}
+        ${spring.season ? `<span class="chip">📅 ${spring.season}</span>` : ''}
+      </div>
+      ${spring.description ? `<p class="detail-desc">${spring.description}</p>` : ''}
+      <dl class="detail-grid">
+        ${spring.hours ? `<dt>Hours</dt><dd>${spring.hours}</dd>` : ''}
+        ${spring.clothing ? `<dt>Clothing</dt><dd>${spring.clothing}</dd>` : ''}
+        ${spring.parking ? `<dt>Parking</dt><dd>${spring.parking}</dd>` : ''}
+        ${spring.pets ? `<dt>Pets</dt><dd>${spring.pets}</dd>` : ''}
+        ${spring.camping ? `<dt>Camping</dt><dd>${spring.camping}</dd>` : ''}
+      </dl>
+      <div class="detail-actions">
+        <a href="/blog/${blogSlug}" class="btn-detail">📖 Read Guide</a>
+        <button onclick="getDirectionsTo(${spring.lat}, ${spring.lng}, '${spring.slug}')" class="btn-detail btn-secondary">Get Directions ↗</button>
+        <button class="btn-detail btn-visit" data-slug="${spring.slug}">${isVisited(spring.slug) ? '✓ Visited' : '✓ Mark Visited'}</button>
+      </div>
+    `;
+
+    content.querySelector('.btn-visit')?.addEventListener('click', () => {
+      if (isVisited(spring.slug)) {
+        unmarkVisited(spring.slug);
+      } else {
+        markVisited(spring.slug);
+      }
+    });
   }
 
-  // Expose functions globally for onclick handlers
-  window.getDirectionsTo = getDirectionsTo;
-  window.openPopupDetail = openPopupDetail;
+  document.getElementById('detail-close')?.addEventListener('click', () => {
+    document.getElementById('spring-detail').classList.add('hidden');
+  });
 
-  // ─── Buttons ────────────────────────────────────────────────────────────────
-
-  document.getElementById('detail-close')?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-    const panel = document.getElementById('spring-detail');
-    if (panel) {
-      panel.style.display = 'none';
-      panel.classList.add('hidden');
+  // Close detail on map click
+  map.on('click', (e) => {
+    const detail = document.getElementById('spring-detail');
+    if (!detail.contains(e.originalEvent.target)) {
+      detail.classList.add('hidden');
     }
   });
 
+  // Expose functions globally for onclick handlers
+  window.getDirectionsTo = getDirectionsTo;
+
+  // ─── Directions buttons ────────────────────────────────────────────────────
   document.getElementById('directions-close')?.addEventListener('click', () => {
     closeDirectionsPanel();
   });
@@ -1204,486 +1189,49 @@ async function initMap() {
     }
   });
 
-  // Close directions panel when clicking empty map space
-  map.on('click', (e) => {
-    const features = map.queryRenderedFeatures(e.point);
-    const isInteractive = features.some(f =>
-      f.layer.id === 'unclustered-point' ||
-      f.layer.id === 'clusters' ||
-      f.layer.id?.startsWith('gas-') ||
-      f.layer.id?.startsWith('poi-') ||
-      f.layer.id?.startsWith('ev-') ||
-      f.layer.id?.startsWith('aqi-') ||
-      f.layer.id?.startsWith('snow-')
-    );
-    if (!isInteractive) {
-      closeDirectionsPanel();
-    }
-  });
-
-  // ─── Style switcher ──────────────────────────────────────────────────────────
-  const styleButtons = document.querySelectorAll('.style-btn');
-  styleButtons.forEach(btn => {
+  // ─── Style switcher ─────────────────────────────────────────────────────────
+  document.querySelectorAll('.style-btn').forEach(btn => {
     btn.addEventListener('click', () => {
+      document.querySelectorAll('.style-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
       const style = btn.dataset.style;
-      if (mapStyles[style]) {
-        map.setStyle(mapStyles[style]);
-        // Update active button state
-        styleButtons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        // Re-add springs source/layers after style loads (setStyle wipes them)
-        map.once('style.load', () => {
-          addSpringsToMap();
-          addIndividualMarkers();
-        });
-      }
+      map.setStyle(mapStyles[style]);
+      map.once('style.load', () => {
+        addSpringsToMap();
+        addIndividualMarkers();
+      });
     });
   });
 
-  // Set initial active state (satellite as default)
-  document.querySelector('.style-btn[data-style="satellite"]')?.classList.add('active');
-
-  // ─── Layer controls ──────────────────────────────────────────────────────────
-  const toggle3D = document.getElementById('toggle-3d');
-  let terrainEnabled = true;
-
-  toggle3D?.addEventListener('click', () => {
-    terrainEnabled = !terrainEnabled;
-    try {
-      if (terrainEnabled) {
-        map.addSource('mapbox-dem', {
-          type: 'raster-dem',
-          url: 'mapbox://mapbox.terrain-rgb',
-          tileSize: 512,
-          maxzoom: 15
-        });
-        map.addLayer({
-          id: 'mapbox-dem',
-          type: 'raster',
-          source: 'mapbox-dem',
-          minzoom: 0,
-          maxzoom: 22
-        });
-        toggle3D.classList.add('active');
-        toggle3D.title = 'Disable 3D terrain';
-      } else {
-        if (map.getLayer('mapbox-dem')) {
-          map.removeLayer('mapbox-dem');
-        }
-        if (map.getSource('mapbox-dem')) {
-          map.removeSource('mapbox-dem');
-        }
-        toggle3D.classList.remove('active');
-        toggle3D.title = 'Enable 3D terrain';
-      }
-    } catch (e) {
-      console.error('Failed to toggle terrain:', e);
-      alert('3D terrain requires the Mapbox GL JS premium plan.');
-    }
-  });
-
-  const toggleFullscreen = document.getElementById('toggle-fullscreen');
-  toggleFullscreen?.addEventListener('click', () => {
-    if (document.fullscreenElement) {
-      document.exitFullscreen();
-      toggleFullscreen.title = 'Toggle fullscreen';
-    } else if (document.documentElement.requestFullscreen) {
-      document.documentElement.requestFullscreen();
-      toggleFullscreen.title = 'Exit fullscreen';
-    }
-  });
-
-  // ─── Auto-open spring from ?spring= URL param ────────────────────────────────
-  const urlSpring = new URLSearchParams(window.location.search).get('spring');
-  if (urlSpring) {
-    const target = springs.find(s => s.slug === urlSpring);
-    if (target) {
-      trackEvent('flyto', target.slug, { source: 'blog_link' });
-      // Wait for map to be ready before flying to the spring
-      map.on('load', () => {
-        map.flyTo({ center: [target.lng, target.lat], zoom: 12, duration: 1500 });
-        // Open detail after flyTo completes
-        map.once('idle', () => openDetail(target, map));
+  // ─── Fullscreen toggle ──────────────────────────────────────────────────────
+  document.getElementById('toggle-fullscreen').addEventListener('click', () => {
+    const mapContainer = document.querySelector('.map-container');
+    if (!document.fullscreenElement) {
+      mapContainer.requestFullscreen().catch(err => {
+        console.error(`Error attempting to enable fullscreen: ${err.message}`);
       });
-      // If map already loaded (race condition), fly immediately
-      if (map.loaded()) {
-        map.flyTo({ center: [target.lng, target.lat], zoom: 12, duration: 1500 });
-        setTimeout(() => openDetail(target, map), 1600);
-      }
+    } else {
+      document.exitFullscreen();
     }
-  }
+  });
 }
 
-initMap();
-
-document.addEventListener('astro:page-load', () => {
+// Start map when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initMap);
+} else {
   initMap();
-});
+}
 </script>
 
 <style>
-  :root {
-    --color-surface: #c8d8d6;
-    --color-bg: #edba97;
-    --color-border: #0a4152;
-    --color-text: #701b15;
-    --color-text-muted: #924a3e;
-    --color-accent: #e17426;
-    --color-accent-light: #ea9657;
-  }
-
-  /* Custom pin markers */
-  .hot-spring-pin {
-    cursor: pointer;
-    transition: transform 0.15s ease;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25));
-  }
-  .hot-spring-pin:hover {
-    transform: scale(1.2) translateY(-4px);
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.35));
-  }
-  .hot-spring-pin.pin-visited svg path {
-    stroke: #fbbf24;
-    stroke-width: 3;
-  }
-
-  /* Passport */
-  .passport-panel {
-    position: absolute;
-    bottom: 1.5rem;
-    right: 1rem;
-    width: min(380px, calc(100% - 2rem));
-    background: var(--color-surface);
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-    padding: 1.5rem;
-    z-index: 1000;
-    max-height: 70vh;
-    overflow-y: auto;
-  }
-  .passport-panel.hidden { display: none; }
-  .passport-close {
-    position: absolute; top: 1rem; right: 1rem;
-    background: var(--color-bg); border: 1px solid var(--color-border);
-    border-radius: 50%; width: 28px; height: 28px;
-    cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; justify-content: center;
-  }
-  .passport-header h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.2rem; }
-  .passport-header p { font-size: 0.8rem; color: var(--color-text-muted); }
-  .passport-progress { margin: 1rem 0; }
-  .progress-bar {
-    width: 100%; height: 12px;
-    background: var(--color-bg); border-radius: 6px;
-    border: 1px solid var(--color-border); overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%; background: linear-gradient(90deg, #2d6a4f, #40916c);
-    border-radius: 6px; transition: width 0.4s ease;
-  }
-  .progress-stats { font-size: 0.8rem; color: var(--color-text-muted); margin-top: 0.3rem; text-align: center; }
-  .progress-stats span:first-child { font-weight: 700; color: var(--color-accent); }
-
-  .passport-badges {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;
-    margin-bottom: 1rem;
-  }
-  .badge {
-    text-align: center; padding: 0.5rem 0.25rem;
-    border-radius: 8px; border: 1px solid var(--color-border);
-    transition: all 0.2s;
-  }
-  .badge.earned { background: #f0fdf4; border-color: #86efac; }
-  .badge.locked { opacity: 0.4; background: var(--color-bg); }
-  .badge-icon { display: block; font-size: 1.5rem; }
-  .badge-label { display: block; font-size: 0.65rem; font-weight: 600; margin-top: 0.15rem; }
-  .badge-threshold { display: block; font-size: 0.55rem; color: var(--color-text-muted); }
-
-  .passport-visited-list { margin-bottom: 1rem; max-height: 150px; overflow-y: auto; }
-  .passport-empty { font-size: 0.85rem; color: var(--color-text-muted); padding: 1rem 0; text-align: center; }
-  .visited-item {
-    display: flex; align-items: center; gap: 0.5rem;
-    padding: 0.4rem 0; border-bottom: 1px solid var(--color-border); font-size: 0.85rem;
-  }
-  .visited-icon { font-size: 1rem; }
-  .visited-name { flex: 1; font-weight: 500; }
-  .unvisit-btn {
-    background: none; border: none; cursor: pointer;
-    color: var(--color-text-muted); font-size: 0.7rem; opacity: 0.5;
-  }
-  .unvisit-btn:hover { opacity: 1; color: #ef4444; }
-
-  .btn-passport-share {
-    width: 100%; padding: 0.5rem;
-    background: var(--color-accent); color: white;
-    border: none; border-radius: 6px; font-size: 0.85rem;
-    font-weight: 600; cursor: pointer; transition: background 0.15s;
-  }
-  .btn-passport-share:hover { background: var(--color-accent-light); }
-
-  .passport-toggle {
-    position: absolute; top: 5rem; left: 3.5rem;
-    background: var(--color-surface); border: 1px solid var(--color-border);
-    border-radius: 8px; padding: 0.6rem 0.8rem;
-    cursor: pointer; font-size: 1.2rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    z-index: 1000; transition: all 0.15s;
-  }
-  .passport-toggle:hover { background: var(--color-bg); transform: scale(1.05); }
-
-  .btn-visited {
-    background: #166534 !important; color: white !important;
-    border: none !important;
-  }
-  .hot-spring-pin-selected svg path {
-    stroke-width: 3;
-    stroke: #fbbf24;
-  }
-
-  /* Full-height layout */
-  .map-page {
-    display: flex;
-    height: calc(100dvh - 60px); /* subtract header height */
-    overflow: hidden;
-  }
-
-  /* Sidebar */
-  .map-sidebar {
-    width: 320px;
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    border-right: 1px solid var(--color-border);
-    background: rgba(200, 216, 214, 0.85);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    overflow: hidden;
-  }
-  .sidebar-header {
-    padding: 1.25rem 1.25rem 0.75rem;
-    border-bottom: 1px solid var(--color-border);
-  }
-  .sidebar-header h1 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.2rem; }
-  .sidebar-header p { font-size: 0.8125rem; color: var(--color-text-muted); }
-
-  .search-wrapper { padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--color-border); }
-  .search-wrapper :global(.mapboxgl-ctrl-geocoder) {
-    width: 100%;
-    border-radius: 6px;
-    font-size: 0.875rem;
-  }
-  .search-wrapper :global(.mapboxgl-ctrl-geocoder--input) {
-    padding: 0.5rem 0.75rem;
-    background: var(--color-bg);
-    border: 1px solid var(--color-border);
-  }
-  .search-wrapper :global(.mapboxgl-ctrl-geocoder--input:focus) {
-    border-color: var(--color-accent);
-    outline: none;
-  }
-  .search-wrapper :global(.mapboxgl-ctrl-geocoder--suggestions) {
-    background: var(--color-surface);
-    border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  }
-  .search-wrapper :global(.mapboxgl-ctrl-geocoder--suggestion) {
-    padding: 0.6rem 1rem;
-    border-color: var(--color-border);
-    color: var(--color-text);
-  }
-  .search-wrapper :global(.mapboxgl-ctrl-geocoder--suggestion:hover) {
-    background: var(--color-bg);
-    color: var(--color-accent);
-  }
-  .search-wrapper :global(.mapboxgl-ctrl-geocoder--icon-marker),
-  .search-wrapper :global(.mapboxgl-ctrl-geocoder--icon-close) {
-    display: flex;  /* Hide icons */
-    width: 0;       /* Hide icons */
-  }
-
-  /* Isochrone sidebar section */
-  .sidebar-section {
-    padding: 0.75rem 1.25rem;
-    border-bottom: 1px solid var(--color-border);
-  }
-  .field-label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-text-muted);
-    display: block;
-    margin-bottom: 0.4rem;
-  }
-  .isochrone-row {
-    display: flex;
-    gap: 0.4rem;
-    margin-bottom: 0.5rem;
-  }
-  .isochrone-row select {
-    flex: 1;
-    padding: 0.4rem 0.5rem;
-    font-size: 0.8rem;
-    border: 1px solid var(--color-border);
-    border-radius: 6px;
-    background: var(--color-bg);
-    color: var(--color-text);
-  }
-  .btn-isochrone {
-    width: 100%;
-    padding: 0.45rem;
-    background: var(--color-accent);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.15s;
-  }
-  .btn-isochrone:hover:not(:disabled) { background: var(--color-accent-light); }
-  .btn-isochrone:disabled { opacity: 0.4; cursor: not-allowed; }
-  .btn-isochrone-clear {
-    width: 100%;
-    padding: 0.35rem;
-    background: var(--color-bg);
-    border: 1px solid var(--color-border);
-    border-radius: 6px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--color-text-muted);
-    cursor: pointer;
-    margin-top: 0.4rem;
-  }
-  .btn-isochrone-clear:hover { background: var(--color-border); }
-  .btn-isochrone-clear.hidden { display: none; }
-
-  .springs-list { flex: 1; overflow-y: auto; padding: 0.5rem 0; }
-  .loading-placeholder { padding: 1rem 1.25rem; color: var(--color-text-muted); font-size: 0.875rem; }
-  .no-results { padding: 1rem 1.25rem; color: var(--color-text-muted); font-size: 0.875rem; }
-
-  .spring-list-item {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    width: 100%;
-    padding: 0.75rem 1.25rem;
-    text-align: left;
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: background 0.1s;
-  }
-  .spring-list-item:hover { background: var(--color-bg); }
-  .list-icon { font-size: 1.25rem; flex-shrink: 0; }
-  .list-info { display: flex; flex-direction: column; min-width: 0; }
-  .list-info strong { font-size: 0.9rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .list-info span { font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.1rem; }
-
-  /* Map */
-  .map-container { flex: 1; position: relative; }
-  #map { width: 100%; height: 100%; }
-
-  /* Style switcher */
-  .style-switcher {
-    position: absolute;
-    top: 1rem;
-    right: 4.5rem;
-    z-index: 1000;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem;
-    background: rgba(200, 216, 214, 0.85);
-    padding: 0.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
-  }
-  .style-btn {
-    padding: 0.4rem 0.8rem;
-    border: 1px solid var(--color-border);
-    border-radius: 6px;
-    background: var(--color-bg);
-    color: var(--color-text);
-    font-size: 0.72rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
-  .style-btn:hover { background: var(--color-border); }
-  .style-btn.active {
-    background: var(--color-accent);
-    color: white;
-    border-color: var(--color-accent);
-  }
-  .style-btn:first-letter { font-size: 1rem; }
-
-  /* Layer controls */
-  .layer-controls {
-    position: absolute;
-    bottom: 3.5rem;
-    right: 1rem;
-    z-index: 1000;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-  .layer-btn {
-    height: 36px;
-    padding: 0 0.75rem;
-    border-radius: 8px;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    color: var(--color-text);
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: all 0.15s;
-    display: flex; align-items: center; gap: 0.35rem;
-    white-space: nowrap;
-  }
-  .layer-btn:hover { background: var(--color-bg); transform: scale(1.05); }
-  .layer-btn.active {
-    background: var(--color-accent);
-    color: white;
-    border-color: var(--color-accent);
-  }
-
-  /* Custom marker */
-  :global(.spring-marker) { background: none; border: none; }
-  :global(.marker-dot) {
-    width: 32px; height: 32px;
-    background: var(--color-accent);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    color: white; font-size: 1rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-    transition: transform 0.15s;
-  }
-  :global(.marker-dot:hover) { transform: scale(1.2); }
-
-  /* Detail panel */
-  .spring-detail {
-    position: absolute;
-    bottom: 1.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    width: min(480px, calc(100% - 3rem));
-    background: rgba(200, 216, 214, 0.9);
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-    padding: 1.5rem;
-    z-index: 1000;
-    max-height: 70vh;
-    overflow-y: auto;
-  }
-  .spring-detail.hidden { display: none; }
-
   /* Directions panel */
   .directions-panel {
     position: absolute;
     top: 5rem;
     right: 1rem;
     width: min(380px, calc(100% - 2rem));
-    background: rgba(200, 216, 214, 0.9);
+    background: rgba(232, 213, 192, 0.9);
     border-radius: 12px;
     box-shadow: 0 8px 32px rgba(0,0,0,0.18);
     padding: 1.5rem;
@@ -1739,133 +1287,10 @@ document.addEventListener('astro:page-load', () => {
     transition: all 0.15s;
   }
   .directions-toggle:hover { background: var(--color-bg); transform: scale(1.05); }
-  .detail-close {
-    position: absolute; top: 1rem; right: 1rem;
-    background: var(--color-bg); border: 1px solid var(--color-border);
-    border-radius: 50%; width: 28px; height: 28px;
-    cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; justify-content: center;
-    z-index: 10;
-  }
-  .spring-detail h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem; padding-right: 2rem; }
 
-  .detail-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.875rem; }
-  .chip {
-    background: var(--color-bg); border: 1px solid var(--color-border);
-    border-radius: 20px; padding: 0.2rem 0.6rem;
-    font-size: 0.75rem; font-weight: 500;
-  }
-  .detail-desc { font-size: 0.9rem; color: var(--color-text-muted); margin-bottom: 1rem; line-height: 1.6; }
-  .detail-grid { display: grid; grid-template-columns: auto 1fr; gap: 0.3rem 0.75rem; font-size: 0.85rem; margin-bottom: 1rem; }
-  .detail-grid dt { font-weight: 600; color: var(--color-text-muted); white-space: nowrap; }
-  .detail-grid dd { color: var(--color-text); }
-  .alert-text { color: #b45309; font-weight: 500; }
-  .insider-tip {
-    background: #f0fdf4; border: 1px solid #bbf7d0;
-    border-radius: 8px; padding: 0.75rem; font-size: 0.85rem;
-    margin-bottom: 1rem; line-height: 1.5;
-  }
-  .detail-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-  .btn-detail {
-    display: inline-block; padding: 0.5rem 1rem;
-    background: var(--color-accent); color: white;
-    border-radius: 6px; font-size: 0.875rem; font-weight: 600;
-    transition: background 0.15s;
-  }
-  .btn-detail:hover { background: var(--color-accent-light); color: white; }
-  .btn-detail.btn-secondary {
-    background: var(--color-bg); color: var(--color-text);
-    border: 1px solid var(--color-border);
-  }
-  .btn-detail.btn-secondary:hover { background: var(--color-border); }
-
-  /* Mapbox popups */
-  .mapbox-popup :global(.mapboxgl-popup-content) {
-    background: var(--color-surface);
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    padding: 1rem;
-    font-family: var(--font-display);
-    max-width: 300px;
-  }
-  .mapbox-popup :global(.mapboxgl-popup-tip) {
-    background: var(--color-accent);
-    border-top-color: var(--color-accent);
-  }
-  .mapbox-popup :global(.mapboxgl-popup-close-button) {
-    color: var(--color-text);
-    font-size: 1.2rem;
-    padding: 0.3rem 0.4rem;
-  }
-  .mapbox-popup :global(.mapboxgl-popup-close-button:hover) {
-    color: var(--color-accent);
-    background: var(--color-bg);
-  }
-
-  .popup-btn {
-    flex: 1;
-    padding: 0.4rem 0.6rem;
-    border: 1px solid var(--color-border);
-    border-radius: 6px;
-    background: var(--color-bg);
-    color: var(--color-text);
-    font-size: 0.75rem;
-    font-weight: 600;
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.15s;
-  }
-  .popup-btn:hover { background: var(--color-border); transform: translateY(-1px); }
-  .popup-btn.popup-btn-primary {
-    background: var(--color-accent);
-    color: white;
-    border-color: var(--color-accent);
-  }
-  .popup-btn.popup-btn-primary:hover { background: var(--color-accent-light); transform: translateY(-1px); }
-  .popup-btn.popup-btn-primary:link {
-    color: white;
-    text-decoration: none;
-    display: block;
-  }
-
-  /* Mobile */
-  @media (max-width: 640px) {
-    .map-page { flex-direction: column; height: 100dvh; }
-    .map-sidebar { width: 100%; height: auto; max-height: 40vh; flex-shrink: 0; border-right: none; border-bottom: 1px solid var(--color-border); overflow: hidden; }
-    .map-container { flex: 1; min-height: 60dvh; position: relative; }
-    #map { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-    .springs-list { display: flex; flex-direction: row; overflow-x: auto; overflow-y: hidden; padding: 0.5rem; gap: 0.5rem; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
-    .spring-list-item { min-width: 180px; scroll-snap-align: start; border: 1px solid var(--color-border); border-radius: 8px; flex-shrink: 0; }
-
-    /* Swipe card for detail panel on mobile */
-    .spring-detail {
-      position: fixed; bottom: 0; left: 0; right: 0;
-      transform: translateY(100%);
-      transition: transform 0.3s ease;
-      border-radius: 16px 16px 0 0;
-      max-height: 80vh;
-      width: 100%;
-    }
-    .spring-detail:not(.hidden) { transform: translateY(0); }
-    .spring-detail.hidden { transform: translateY(100%); }
-
-    .passport-panel {
-      position: fixed; bottom: 0; left: 0; right: 0;
-      border-radius: 16px 16px 0 0;
-      width: 100%;
-    }
-
-    .style-switcher { top: 0.5rem; right: 0.5rem; grid-template-columns: repeat(3, 1fr); gap: 0.3rem; padding: 0.3rem; }
-    .style-btn { padding: 0.3rem 0.5rem; font-size: 0.6rem; }
-
-    .layer-controls { bottom: 0.5rem; right: 0.5rem; flex-wrap: wrap; gap: 0.3rem; }
-    .layer-btn { height: 32px; font-size: 0.75rem; padding: 0 0.5rem; }
-
-    .passport-toggle { top: 0.5rem; left: 0.5rem; padding: 0.4rem 0.6rem; font-size: 1rem; }
+  /* Mobile responsive overrides */
+  @media (max-width: 768px) {
     .directions-toggle { display: none; }
     .directions-panel { top: 0.5rem; right: 0.5rem; width: calc(100% - 1rem); }
-
-    /* Sidebar sections hidden on mobile to save space */
-    .sidebar-section { padding: 0.5rem 1rem; }
-    .isochrone-row { flex-direction: column; }
   }
 </style>
