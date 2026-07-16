@@ -13,6 +13,7 @@ import {
   FaGlobe,
   FaYoutube,
 } from "react-icons/fa";
+import { SiBluesky, SiThreads } from "react-icons/si";
 
 interface Props {
   links?: SocialLinks;
@@ -28,6 +29,20 @@ const iconClass =
 {
   links && (
     <ul class="py-2 flex items-center">
+      {links.bluesky && (
+        <li class={liClass}>
+          <a
+            class={iconClass}
+            aria-label="Bluesky"
+            href={links.bluesky}
+            target="_blank"
+            rel="noopener noreferrer nofollow"
+          >
+            <span class="sr-only">Bluesky</span>
+            <SiBluesky className="w-6 h-6" />
+          </a>
+        </li>
+      )}
       {links.discord && (
         <li class={liClass}>
           <a
@@ -165,6 +180,20 @@ const iconClass =
           >
             <span class="sr-only">YouTube</span>
             <FaYoutube className="w-6 h-6" />
+          </a>
+        </li>
+      )}
+      {links.threads && (
+        <li class={liClass}>
+          <a
+            class={iconClass}
+            aria-label="Threads"
+            href={links.threads}
+            target="_blank"
+            rel="noopener noreferrer nofollow"
+          >
+            <span class="sr-only">Threads</span>
+            <SiThreads className="w-6 h-6" />
           </a>
         </li>
       )}
